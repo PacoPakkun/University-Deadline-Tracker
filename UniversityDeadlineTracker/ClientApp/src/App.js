@@ -1,22 +1,37 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import React, {useState} from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import './App.css'
+import {useToken} from "./Utils/Token";
+import {Pages} from "./Utils/Enums";
+import {Header} from "./Components/Header";
+import LoginPage from "./Pages/LoginPage";
+import {BoardPage} from "./Pages/BoardPage";
+import BacklogPage from "./Pages/BacklogPage";
+import CommunityPage from "./Pages/CommunityPage";
 
-import './custom.css'
-
-export default class App extends Component {
-  static displayName = App.name;
-
-  render () {
+export const App = () => {
+    const {token, setToken} = useToken();
+    
     return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} />
-      </Layout>
+        <React.Fragment>
+            <Router>
+                <Header token={token} setToken={setToken}/>
+                <Switch>
+                    <Route exact path={Pages.HOME}>
+                        <LoginPage token={token} setToken={setToken}/>
+                    </Route>
+                    <Route path={Pages.BOARD}>
+                        <BoardPage token={token}/>
+                    </Route>
+                    <Route path={Pages.BACKLOG}>
+                        <BacklogPage token={token}/>
+                    </Route>
+                    <Route path={Pages.COMMUNITY}>
+                        <CommunityPage token={token}/>
+                    </Route>
+                </Switch>
+            </Router>
+        </React.Fragment>
     );
-  }
 }
+export default App
